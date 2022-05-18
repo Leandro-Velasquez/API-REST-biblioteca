@@ -4,7 +4,7 @@ require_once "Models/Book.php";
 class BooksService {
 
     public function get($id = null) {
-        $books = !empty($id) ? Book::selectById($id): null;
+        $books = !empty($id) ? Book::selectById($id): Book::selectAll();
         echo json_encode($books);
     }
 
