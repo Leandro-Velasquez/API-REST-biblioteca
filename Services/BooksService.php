@@ -8,8 +8,9 @@ class BooksService {
         echo json_encode($books);
     }
 
-    public function post() {
-
+    public function post($data = null) {
+        Book::addBook($data);
+        echo "El libro fue agregado.";
     }
 
     public function put() {
