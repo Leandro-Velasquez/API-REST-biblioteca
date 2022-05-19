@@ -22,5 +22,12 @@ class Book {
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public static function addBook($data) {
+        $sql = 'INSERT INTO ' . self::$table . ' (nombre, autor, imagen) VALUES (?, ?, ?)';
+
+        $stmt = Db::connect()->prepare($sql);
+        $stmt->execute(array($data['nombre'], $data['autor'], $data['imagen']));
+    }
 }
 ?>
