@@ -13,8 +13,9 @@ class BooksService {
         echo "El libro fue agregado.";
     }
 
-    public function put() {
-
+    public function put($data = null) {
+        Book::updateBook($data);
+        echo "Los datos del libro fueron editados.";
     }
 
     public function delete() {
