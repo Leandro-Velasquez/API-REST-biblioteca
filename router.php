@@ -31,6 +31,13 @@ if(array_shift($url) == "api") {
             }
             break;
         case 'DELETE':
+            $data = json_decode(file_get_contents('php://input'), true);
+            if($data['id_libro']) {
+                $obj = new $service;
+                call_user_func_array(array($obj, strtolower($method)), array($data));
+            }else {
+                echo "Error al intentar eliminar el recurso, id invalido.";
+            }
             break;
     }
 }
