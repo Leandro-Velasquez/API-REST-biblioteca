@@ -17,11 +17,18 @@ if(array_shift($url) == "api") {
             call_user_func_array(array($obj, strtolower($method)), $url);
             break;
         case 'POST':
-            $json = json_decode(file_get_contents('php://input'), true);
+            $data = json_decode(file_get_contents('php://input'), true);
             $obj = new $service;
-            call_user_func_array(array($obj, strtolower($method)), array($json));
+            call_user_func_array(array($obj, strtolower($method)), array($data));
             break;
         case 'PUT':
+            $data = json_decode(file_get_contents('php://input'), true);
+            if($data['id_libro']) {
+                $obj = new $service;
+                call_user_func_array(array($obj, strtolower($method)), array($data));
+            }else {
+                echo "Error al intentar modificar el recurso, id invalido.";
+            }
             break;
         case 'DELETE':
             break;
