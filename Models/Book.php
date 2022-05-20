@@ -29,5 +29,15 @@ class Book {
         $stmt = Db::connect()->prepare($sql);
         $stmt->execute(array($data['nombre'], $data['autor'], $data['imagen']));
     }
+
+    public static function updateBook($data) {
+        $row = self::selectById($data['id_libro']);
+        $row_update = array_replace($row, $data);
+        
+        $sql = 'UPDATE ' . self::$table . ' SET nombre=:nombre, autor=:autor, imagen=:imagen WHERE id_libro=:id_libro';
+        $stmt = Db::connect()->prepare($sql);
+
+        $stmt->execute($row_update);
+    }
 }
 ?>
