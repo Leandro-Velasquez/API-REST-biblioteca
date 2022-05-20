@@ -39,5 +39,11 @@ class Book {
 
         $stmt->execute($row_update);
     }
+
+    public static function deleteBook($data) {
+        $sql = 'DELETE FROM ' . self::$table . ' WHERE id_libro=:id_libro';
+        $stmt = Db::connect()->prepare($sql);
+        $stmt->execute($data);
+    }
 }
 ?>
