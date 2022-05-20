@@ -18,8 +18,9 @@ class BooksService {
         echo "Los datos del libro fueron editados.";
     }
 
-    public function delete() {
-
+    public function delete($id) {
+        Book::deleteBook($id);
+        echo "El libro fue eliminado de la base de datos";
     }
 }
 ?>
