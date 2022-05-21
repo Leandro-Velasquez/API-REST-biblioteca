@@ -5,12 +5,13 @@ class BooksService {
 
     public function get($id = null) {
         $books = !empty($id) ? Book::selectById($id): Book::selectAll();
+        header('Content-type: application/json');
         echo json_encode($books);
     }
 
     public function post($data = null) {
         Book::addBook($data);
-        echo "El libro fue agregado.";
+        echo Book::getIdLastBookAdd()['id_libro'];
     }
 
     public function put($data = null) {
