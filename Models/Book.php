@@ -45,5 +45,12 @@ class Book {
         $stmt = Db::connect()->prepare($sql);
         $stmt->execute($data);
     }
+
+    public static function getIdLastBookAdd() {
+        $sql = 'SELECT MAX(id_libro) AS id_libro FROM ' . self::$table;
+        $stmt = Db::connect()->query($sql);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }
 ?>
