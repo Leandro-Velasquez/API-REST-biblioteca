@@ -17,8 +17,19 @@ class AuthToken {
         }
     }
 
+    public function verificarHeadersEnServer($headers) {
+        if(array_key_exists($headers['user'], $_SERVER) && array_key_exists($headers['psw'], $_SERVER)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     public function verificarCredencialesEnDB() {
-        
+        User::getUserByUserAndPw($this->getUser(), $this->getPsw())?
+        true:
+        false;
     }
 
     public function verificarMetodoHTTP() {
@@ -41,7 +52,12 @@ class AuthToken {
     }
 
     public function run() {
-
+        if($this->verificarCredencialesEnDB()) {
+            $this->verificarMetodoHTTP();
+        }
+        else {
+            die('Las credenciales son invalidas');
+        }
     }
 
     public function getUser() {
@@ -50,14 +66,5 @@ class AuthToken {
 
     public function getPsw() {
         return $this->psw;
-    }
-
-    public function verificarHeadersEnServer($headers) {
-        if(array_key_exists($headers['user'], $_SERVER) && array_key_exists($headers['psw'], $_SERVER)) {
-            return true;
-        }
-        else {
-            return false;
-        }
     }
 }
