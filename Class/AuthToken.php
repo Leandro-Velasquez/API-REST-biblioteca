@@ -27,19 +27,24 @@ class AuthToken {
     }
 
     public function verificarCredencialesEnDB() {
-        User::getUserByUserAndPw($this->getUser(), $this->getPsw())?
-        true:
-        false;
+        $data = User::getUserByUserAndPw($this->getUser(), $this->getPsw());
+        if(!empty($data)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function verificarMetodoHTTP() {
-        switch($_SERVER['REQUEST_METHOD']) {
+        switch(strtoupper($_SERVER['REQUEST_METHOD'])) {
             case 'GET':
+                $this->get();
                 break;
             case 'POST':
+                $this->post();
                 break;
             default:
-                die;
+                die('El metodo solicitado es invalido.');
         };
     }
 
@@ -48,7 +53,11 @@ class AuthToken {
     }
 
     public function post() {
+        $dataUser = User::getUserByUserAndPw($this->getUser(), $this->getPsw());
+        $token = Token::generateToken($dataUser['id_user'], $dataUser['user']);
 
+        header('Content-type: application/json');
+        echo json_encode(array('access-token'=>$token));
     }
 
     public function run() {
