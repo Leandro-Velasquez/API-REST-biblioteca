@@ -59,7 +59,14 @@ class AuthToken {
         switch($this->method) {
             case 'GET':
                 if($this->verificarHeadersEnServerToken()) {
-
+                    if($this->verificarTokenEnDB()) {
+                        header('Content-type: application/json');
+                        echo json_encode(array('access-resource'=>true));
+                    }else {
+                        die('El token utilizado es invalido.');
+                    }
+                }else {
+                    die('El encabezado ' . $this->headers['token'] . ' no fue definido.');
                 }
                 break;
             case 'POST':
