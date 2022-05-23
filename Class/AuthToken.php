@@ -45,7 +45,15 @@ class AuthToken {
         }
     }
 
-    
+    public function verificarTokenEnDB() {
+        $dataToken = Token::getToken($this->token);
+        if(!empty($dataToken)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 
     public function verificarMetodoHTTP() {
         switch($this->method) {
