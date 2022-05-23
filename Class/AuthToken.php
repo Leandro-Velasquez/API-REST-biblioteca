@@ -60,8 +60,7 @@ class AuthToken {
             case 'GET':
                 if($this->verificarHeadersEnServerToken()) {
                     if($this->verificarTokenEnDB()) {
-                        header('Content-type: application/json');
-                        echo json_encode(array('access-resource'=>true));
+                        $this->get();
                     }else {
                         die('El token utilizado es invalido.');
                     }
@@ -88,7 +87,8 @@ class AuthToken {
     }
 
     public function get() {
-
+        header('Content-type: application/json');
+        echo json_encode(array('access-resource'=>true));
     }
 
     public function post() {
