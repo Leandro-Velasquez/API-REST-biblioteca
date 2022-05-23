@@ -7,6 +7,7 @@ class AuthToken {
     private $psw;
     private $headers;
     private $method;
+    private $token;
 
     public function __construct($headers=['user'=>null,'psw'=>null])
     {
@@ -25,6 +26,16 @@ class AuthToken {
         }
     }
 
+    public function verificarHeadersEnServerToken() {
+        if(array_key_exists($this->headers['token'], $_SERVER)) {
+            $this->token = $_SERVER[$this->headers['token']];
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     public function verificarCredencialesEnDB() {
         $data = User::getUserByUserAndPw($this->getUser(), $this->getPsw());
         if(!empty($data)) {
@@ -34,10 +45,14 @@ class AuthToken {
         }
     }
 
+    
+
     public function verificarMetodoHTTP() {
         switch($this->method) {
             case 'GET':
-                $this->get();
+                if($this->verificarHeadersEnServerToken()) {
+
+                }
                 break;
             case 'POST':
                 if($this->verificarHeadersEnServerUserPsw()) {
