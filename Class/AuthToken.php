@@ -5,20 +5,19 @@ require_once "Models/User.php";
 class AuthToken {
     private $user;
     private $psw;
+    private $headers;
+    private $method;
 
     public function __construct($headers=['user'=>null,'psw'=>null])
     {
-        if($this->verificarHeadersEnServer($headers)) {
-            $this->user = $_SERVER[$headers['user']];
-            $this->psw  = $_SERVER[$headers['psw']];
-        }
-        else {
-            die('No existen esos encabezados en $_SERVER');
-        }
+        $this->headers = $headers;
+        $this->method = strtoupper($_SERVER['REQUEST_METHOD']);
     }
 
-    public function verificarHeadersEnServer($headers) {
-        if(array_key_exists($headers['user'], $_SERVER) && array_key_exists($headers['psw'], $_SERVER)) {
+    public function verificarHeadersEnServerUserPsw() {
+        if(array_key_exists($this->headers['user'], $_SERVER) && array_key_exists($this->headers['psw'], $_SERVER)) {
+            $this->user = $_SERVER[$this->headers['user']];
+            $this->psw = $_SERVER[$this->headers['psw']];
             return true;
         }
         else {
@@ -36,12 +35,22 @@ class AuthToken {
     }
 
     public function verificarMetodoHTTP() {
-        switch(strtoupper($_SERVER['REQUEST_METHOD'])) {
+        switch($this->method) {
             case 'GET':
                 $this->get();
                 break;
             case 'POST':
-                $this->post();
+                if($this->verificarHeadersEnServerUserPsw()) {
+                    if($this->verificarCredencialesEnDB()) {
+                        $this->post();
+                    }
+                    else {
+                        die('Las credenciales son invalidas.');
+                    }
+                }
+                else {
+                    die('Los encabezados ' . $this->headers['user'] . ' y ' . $this->headers['psw']. ' no fueron enviados.');
+                }
                 break;
             default:
                 die('El metodo solicitado es invalido.');
@@ -55,18 +64,14 @@ class AuthToken {
     public function post() {
         $dataUser = User::getUserByUserAndPw($this->getUser(), $this->getPsw());
         $token = Token::generateToken($dataUser['id_user'], $dataUser['user']);
+        Token::saveToken($dataUser['id_user'], $token);
 
         header('Content-type: application/json');
         echo json_encode(array('access-token'=>$token));
     }
 
     public function run() {
-        if($this->verificarCredencialesEnDB()) {
-            $this->verificarMetodoHTTP();
-        }
-        else {
-            die('Las credenciales son invalidas');
-        }
+        $this->verificarMetodoHTTP();
     }
 
     public function getUser() {
