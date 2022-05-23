@@ -12,6 +12,13 @@ class Token {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public static function saveToken($idUser, $token) {
+        $sql = 'INSERT INTO ' . self::$table . '(token, id_user) VALUES (?, ?)';
+        $stmt = Db::connect()->prepare($sql);
+
+        $stmt->execute(array($token, $idUser));
+    }
+
     public static function generateToken($id, $user) {
         return sha1($id . $user. time());
     }
