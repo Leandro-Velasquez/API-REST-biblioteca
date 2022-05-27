@@ -4,7 +4,13 @@ header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Ac
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 
 require_once "autoload.php";
-
+/*require_once "Class/AuthToken.php";
+$headers = [
+    'user'=>'HTTP_X_USER',
+    'psw'=>'HTTP_X_PSW',
+    'token' => 'HTTP_X_TOKEN',
+];
+(new AuthToken($headers))->run();*/
 $url = explode('/', trim($_SERVER['REQUEST_URI'], '/'));
 
 if(array_shift($url) == "api") {
