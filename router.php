@@ -23,9 +23,9 @@ if(array_shift($url) == "api") {
             call_user_func_array(array($obj, strtolower($method)), $url);
             break;
         case 'POST':
-            $data = json_decode(file_get_contents('php://input'), true);
+            //$data = json_decode(file_get_contents('php://input'), true);
             $obj = new $service;
-            call_user_func_array(array($obj, strtolower($method)), array($data));
+            call_user_func(array($obj, strtolower($method)));
             break;
         case 'PUT':
             $data = json_decode(file_get_contents('php://input'), true);
