@@ -27,7 +27,7 @@ class Book {
         $sql = 'INSERT INTO ' . self::$table . ' (nombre, autor, imagen) VALUES (?, ?, ?)';
 
         $stmt = Db::connect()->prepare($sql);
-        $stmt->execute(array($data['nombre'], $data['autor'], $data['imagen']));
+        return $stmt->execute(array($data['nombre'], $data['autor'], $data['imagen']));
     }
 
     public static function updateBook($data) {
