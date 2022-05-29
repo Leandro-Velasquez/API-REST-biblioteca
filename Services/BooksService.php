@@ -9,9 +9,16 @@ class BooksService {
         echo json_encode($books);
     }
 
-    public function post($data = null) {
-        Book::addBook($data);
-        echo Book::getIdLastBookAdd()['id_libro'];
+    public function post() {
+        $dir_subida = 'Images/uploads/';
+        $imagen_subida = $dir_subida . basename($_FILES['file']['name']);
+
+        $data = array('nombre' => $_POST['nombre'], 'autor' => $_POST['autor'], 'imagen' => $dir_subida);
+        if(move_uploaded_file($_FILES['file']['tmp_name'], $imagen_subida)) {
+            Book::addBook($data);
+            $json = array('id' => Book::getIdLastBookAdd()['id_libro'], 'nombre' => $_POST['nombre'], 'autor' => $_POST['autor'], 'imagen' => $_FILES['file']['name']);
+            echo json_encode($json);
+        }
     }
 
     public function put($data = null) {
